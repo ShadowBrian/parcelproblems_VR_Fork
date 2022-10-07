@@ -2,20 +2,20 @@
 #
 # Get latest from https://github.com/github/gitignore/blob/main/Unity.gitignore
 #
-/LD51/LD51/[Ll]ibrary/
-/LD51/LD51/[Tt]emp/
-/LD51/LD51/[Oo]bj/
-/LD51/LD51/[Bb]uild/
-/LD51/LD51/[Bb]uilds/
-/LD51/LD51/[Ll]ogs/
-/LD51/LD51/[Uu]ser[Ss]ettings/
+/LD51/LD51/Library/
+/LD51/LD51/Temp/
+/LD51/LD51/obj/
+/LD51/LD51/Build/
+/LD51/LD51/Builds/
+/LD51/LD51/Logs/
+/LD51/LD51/UserSettings/
 
 # MemoryCaptures can get excessive in size.
 # They also could contain extremely sensitive data
-/LD51/LD51//[Mm]emoryCaptures/
+/LD51/LD51/[Mm]emoryCaptures/
 
 # Recordings can get excessive in size
-/LD51/LD51//[Rr]ecordings/
+/LD51/LD51/[Rr]ecordings/
 
 # Uncomment this line if you wish to ignore the asset store tools plugin
 # /[Aa]ssets/AssetStoreTools*
