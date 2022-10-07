@@ -69,14 +69,14 @@ public class GameManager : MonoBehaviour
 
     public Canvas startCanvas;
 
-    private bool shiftStarted = false;
+    public bool shiftStarted = false;
 
     public delegate void PackageSent();
     public event PackageSent OnPackageSend;
 
     public float GetDifficulty()
     {
-        return currentDifficulty + timescaleDifficultyCoeff * (Mathf.Clamp(totalTimeTimer, 0, 400) + Mathf.Clamp(_totalShipped,0,30));
+        return currentDifficulty + timescaleDifficultyCoeff * (Mathf.Clamp(totalTimeTimer, 0, 400) + Mathf.Clamp(_totalShipped, 0, 30));
     }
 
     void Awake()
@@ -86,11 +86,11 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        for(int i = 0; i < globalItemArray.Length; i++ )
+        for (int i = 0; i < globalItemArray.Length; i++)
         {
             var script = globalItemArray[i].GetComponent<Item>();
 
-            if(script != null )
+            if (script != null)
             {
                 script.itemID = i;
             }
@@ -102,44 +102,44 @@ public class GameManager : MonoBehaviour
         _chm = cameraProfile.GetSetting<ChromaticAberration>();
         _dof = cameraProfile.GetSetting<DepthOfField>();
 
-        diffCoeff = Random.Range( -2, 2 );
+        diffCoeff = Random.Range(-2, 2);
 
-        endCanvas.gameObject.SetActive( false );
+        endCanvas.gameObject.SetActive(false);
     }
 
     // Update is called once per frame
     void Update()
     {
-        if( shiftStarted )
+        if (shiftStarted)
         {
             packageTimer += Time.deltaTime;
             totalTimeTimer += Time.deltaTime;
-            timerText.text = ( ( int )( packageTimer * 10 ) / 10f ).ToString();
-            totalTimeText.text = ( ( int )( totalTimeTimer * 10 ) / 10f ).ToString();
+            timerText.text = ((int)(packageTimer * 10) / 10f).ToString();
+            totalTimeText.text = ((int)(totalTimeTimer * 10) / 10f).ToString();
         }
 
 
-        if( packageTimer > 25 || _errorCounter > allowedErrors ) GameOver();
-        
-        
+        if (packageTimer > 25 || _errorCounter > allowedErrors) GameOver();
+
+
         UpdateVisuals();
 
-        if( _totalShipped < 10 ) currentDifficulty = 0;
-        else if( _totalShipped < 20 + diffCoeff ) currentDifficulty = 1;
-        else if (_totalShipped < 30 + diffCoeff ) currentDifficulty = 2;
-        else if( _totalShipped < 41 + diffCoeff ) currentDifficulty = 3;
+        if (_totalShipped < 10) currentDifficulty = 0;
+        else if (_totalShipped < 20 + diffCoeff) currentDifficulty = 1;
+        else if (_totalShipped < 30 + diffCoeff) currentDifficulty = 2;
+        else if (_totalShipped < 41 + diffCoeff) currentDifficulty = 3;
 
         maxConveyorSpeed = currentDifficulty + 1;
 
-        if( !heartbeat.isPlaying && packageTimer > 15 ) heartbeat.Play();
-        if( GAMEOVER ) heartbeat.Stop();
+        if (!heartbeat.isPlaying && packageTimer > 15) heartbeat.Play();
+        if (GAMEOVER) heartbeat.Stop();
 
-        _errorCounter = Mathf.Clamp( _errorCounter, 0, 10 );
+        _errorCounter = Mathf.Clamp(_errorCounter, 0, 10);
     }
 
     private void GameOver()
     {
-        if(!GAMEOVER )
+        if (!GAMEOVER)
         {
             GAMEOVER = true;
 
@@ -147,12 +147,12 @@ public class GameManager : MonoBehaviour
             endShipped.text = _totalShipped + " Total Packages Shipped";
             endPerfect.text = _perfectPackages + " Perfect Packages";
             endGarbage.text = _garbagePackages + " Terrible Packages";
-            endOkay.text = Mathf.Abs( _totalShipped - _garbagePackages - _perfectPackages ) + " Okay Packages";
-            if( _fastestPackage < 30 ) endFastest.text = ( ( int )( _fastestPackage * 100 ) / 100f ) + "s Fastest Package";
+            endOkay.text = Mathf.Abs(_totalShipped - _garbagePackages - _perfectPackages) + " Okay Packages";
+            if (_fastestPackage < 30) endFastest.text = ((int)(_fastestPackage * 100) / 100f) + "s Fastest Package";
             else endFastest.text = "";
 
 
-            endCanvas.gameObject.SetActive( true );
+            endCanvas.gameObject.SetActive(true);
 
             phoneCall.Play();
         }
@@ -161,37 +161,37 @@ public class GameManager : MonoBehaviour
 
     public void StartShift()
     {
-        startCanvas.gameObject.SetActive( false );
+        startCanvas.gameObject.SetActive(false);
         shiftStarted = true;
     }
 
     public void Restart()
     {
         Scene thisScene = SceneManager.GetActiveScene();
-        SceneManager.LoadScene( thisScene.name );
+        SceneManager.LoadScene(thisScene.name);
     }
 
-    public void SendPackage(bool unfolded, bool taped, bool labeled, int[] contents) 
-    { 
-        
+    public void SendPackage(bool unfolded, bool taped, bool labeled, int[] contents)
+    {
+
 
         //CALCULATING TOTAL POINTS
         int totalPoints = 0;
         PackageRequest req = packageReq.currentReq;
 
-        if( currentDifficulty == 0 ) packageTimer--;
-        if( currentDifficulty > 1 ) packageTimer += 1f;
-        if( currentDifficulty > 2 ) packageTimer += 1.9f;
+        if (currentDifficulty == 0) packageTimer--;
+        if (currentDifficulty > 1) packageTimer += 1f;
+        if (currentDifficulty > 2) packageTimer += 1.9f;
 
-        if(unfolded & taped )
+        if (unfolded & taped)
         {
-            audio.PlayClip( 4 );
+            audio.PlayClip(4);
 
-            for( int i = 0; i < contents.Length; i++ )
+            for (int i = 0; i < contents.Length; i++)
             {
-                for( int j = 0; j < req.requestItems.Length; j++ )
+                for (int j = 0; j < req.requestItems.Length; j++)
                 {
-                    if( contents[i] == req.requestItems[j] )
+                    if (contents[i] == req.requestItems[j])
                     {
                         req.requestItems[j] = -1;
                         contents[i] = -1;
@@ -200,46 +200,46 @@ public class GameManager : MonoBehaviour
             }
 
             int totalCorrect = 0;
-            for( int i = 0; i < contents.Length; i++ )
+            for (int i = 0; i < contents.Length; i++)
             {
-                if( contents[i] == -1 ) totalCorrect += 1;
+                if (contents[i] == -1) totalCorrect += 1;
             }
 
-            if( labeled && totalCorrect == contents.Length ) _perfectPackages++;
-            if( totalCorrect == 0 )
+            if (labeled && totalCorrect == contents.Length) _perfectPackages++;
+            if (totalCorrect == 0)
             {
                 _garbagePackages++;
-                audio.PlayClip( 5 );
+                audio.PlayClip(5);
                 totalPoints = 0;
             }
             else
             {
-                audio.PlayClip( 4 );
-                totalPoints = ( int )( totalCorrect / ( ( float )contents.Length ) * 100 ) + 50;
+                audio.PlayClip(4);
+                totalPoints = (int)(totalCorrect / ((float)contents.Length) * 100) + 50;
             }
 
-            
 
-            if( !labeled )
+
+            if (!labeled)
             {
-                totalPoints = ( int )( totalPoints * .4f );
+                totalPoints = (int)(totalPoints * .4f);
             }
 
-            if(packageTimer < 10 )
+            if (packageTimer < 10)
             {
                 totalPoints += (int)(Mathf.Clamp(Mathf.Abs(10 - packageTimer), 0, 5)) * 10;
             }
 
-            totalPoints += ( int )( totalPoints * 0.1f * Random.value );
+            totalPoints += (int)(totalPoints * 0.1f * Random.value);
 
-            _packageTimes.Add( packageTimer );
+            _packageTimes.Add(packageTimer);
 
-            if( _fastestPackage > packageTimer ) _fastestPackage = packageTimer;
+            if (_fastestPackage > packageTimer) _fastestPackage = packageTimer;
 
             _totalShipped++;
 
             float average = 0;
-            for(int i = 0; i < _packageTimes.Count && i < packageAVGNum; i++ )
+            for (int i = 0; i < _packageTimes.Count && i < packageAVGNum; i++)
             {
                 average += _packageTimes[_packageTimes.Count - 1 - i];
             }
@@ -251,7 +251,7 @@ public class GameManager : MonoBehaviour
 
 
 
-            if( _avgPackageTime > 10 ) _errorCounter++;
+            if (_avgPackageTime > 10) _errorCounter++;
             else if (_errorCounter > 0) _errorCounter--;
 
             lastPackageTime = packageTimer;
@@ -260,27 +260,27 @@ public class GameManager : MonoBehaviour
         {
             totalPoints = -50;
             _garbagePackages += 1;
-            _errorCounter+= 2;
+            _errorCounter += 2;
             _totalShipped++;
 
-            _packageTimes.Add( 10 );
+            _packageTimes.Add(10);
 
-            audio.PlayClip( 5 );
+            audio.PlayClip(5);
         }
 
         _totalPoints += totalPoints;
 
-        print( "Awarded " + totalPoints + " Points || TOTAL POINTS: " + _totalPoints );
+        print("Awarded " + totalPoints + " Points || TOTAL POINTS: " + _totalPoints);
 
         packageTimer = 0;
-        
+
         OnPackageSend();
 
-        print( "Total Time Per Ship Average: " + ( _avgPackageTime ) );
+        print("Total Time Per Ship Average: " + (_avgPackageTime));
 
-        if( _errorCounter > 2 )
+        if (_errorCounter > 2)
         {
-            if (!heartbeat.isPlaying ) heartbeat.Play();
+            if (!heartbeat.isPlaying) heartbeat.Play();
         }
         else heartbeat.Pause();
 
@@ -289,14 +289,14 @@ public class GameManager : MonoBehaviour
     private void UpdateVisuals()
     {
 
-        if( !GAMEOVER && shiftStarted)
+        if (!GAMEOVER && shiftStarted)
         {
-            if( packageTimer > 14.9 || _avgPackageTime > 10)
+            if (packageTimer > 14.9 || _avgPackageTime > 10)
             {
 
-                _vin.intensity.Interp( _vin.intensity.value, .3f, Time.deltaTime * effectInterpTime );
-                _chm.intensity.Interp( _chm.intensity.value, .3f, Time.deltaTime * effectInterpTime );
-                _dof.focusDistance.Interp( _dof.focusDistance.value, .6f, Time.deltaTime * effectInterpTime );
+                _vin.intensity.Interp(_vin.intensity.value, .3f, Time.deltaTime * effectInterpTime);
+                _chm.intensity.Interp(_chm.intensity.value, .3f, Time.deltaTime * effectInterpTime);
+                _dof.focusDistance.Interp(_dof.focusDistance.value, .6f, Time.deltaTime * effectInterpTime);
             }
             //else if( _avgPackageTime > 0 && _avgPackageTime < 10)
             //{
@@ -307,20 +307,20 @@ public class GameManager : MonoBehaviour
             else
             {
 
-                float coeff = Mathf.Clamp( ( effectIntensity * Mathf.Clamp( Time.time / 190, 0, 1 ) + _errorCounter / ( float )allowedErrors ), 0, 1 );
+                float coeff = Mathf.Clamp((effectIntensity * Mathf.Clamp(Time.time / 190, 0, 1) + _errorCounter / (float)allowedErrors), 0, 1);
 
-                _vin.intensity.Interp( _vin.intensity.value, .2f + 0.2f * coeff, Time.deltaTime * effectInterpTime );
-                _chm.intensity.Interp( _chm.intensity.value, .1f + 0.4f * coeff, Time.deltaTime * effectInterpTime );
-                _dof.focusDistance.Interp( _dof.focusDistance.value, 1 - 0.6f * coeff, Time.deltaTime * effectInterpTime );
+                _vin.intensity.Interp(_vin.intensity.value, .2f + 0.2f * coeff, Time.deltaTime * effectInterpTime);
+                _chm.intensity.Interp(_chm.intensity.value, .1f + 0.4f * coeff, Time.deltaTime * effectInterpTime);
+                _dof.focusDistance.Interp(_dof.focusDistance.value, 1 - 0.6f * coeff, Time.deltaTime * effectInterpTime);
 
 
             }
         }
         else
         {
-            _vin.intensity.Interp( _vin.intensity.value, .4f, Time.deltaTime * effectInterpTime );
-            _chm.intensity.Interp( _chm.intensity.value, .6f, Time.deltaTime * effectInterpTime );
-            _dof.focusDistance.Interp( _dof.focusDistance.value, .169f, Time.deltaTime * effectInterpTime );
+            _vin.intensity.Interp(_vin.intensity.value, .4f, Time.deltaTime * effectInterpTime);
+            _chm.intensity.Interp(_chm.intensity.value, .6f, Time.deltaTime * effectInterpTime);
+            _dof.focusDistance.Interp(_dof.focusDistance.value, .169f, Time.deltaTime * effectInterpTime);
         }
 
     }
@@ -329,22 +329,22 @@ public class GameManager : MonoBehaviour
 
     public void SpawnLabel()
     {
-        var obj = Instantiate( labelPrefab, labelSpawnPoint.transform.position, Quaternion.identity );
+        var obj = Instantiate(labelPrefab, labelSpawnPoint.transform.position, Quaternion.identity);
         var rb = obj.GetComponent<Rigidbody>();
-        if( rb != null )
+        if (rb != null)
         {
-            rb.AddForce( labelSpawnPoint.transform.right * spawnVel * GetDifficulty() );
+            rb.AddForce(labelSpawnPoint.transform.right * spawnVel * GetDifficulty());
         }
     }
 
     public void SpawnTape()
     {
-        var obj = Instantiate( tapePrefab, tapeSpawnPoint.transform.position, Quaternion.identity );
+        var obj = Instantiate(tapePrefab, tapeSpawnPoint.transform.position, Quaternion.identity);
 
         var rb = obj.GetComponent<Rigidbody>();
-        if( rb != null )
+        if (rb != null)
         {
-            rb.AddForce( tapeSpawnPoint.transform.right * spawnVel * GetDifficulty() );
+            rb.AddForce(tapeSpawnPoint.transform.right * spawnVel * GetDifficulty());
         }
     }
 }
