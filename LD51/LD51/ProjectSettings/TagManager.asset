@@ -14,6 +14,8 @@ TagManager:
   - button_label
   - button_tape
   - boxlabel
+  - nograb
+  - hinged
   layers:
   - Default
   - TransparentFX
